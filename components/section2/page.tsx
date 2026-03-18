@@ -7,22 +7,22 @@ import Button from '@/components/button/button';
 
 const projects = [
     {
-        title: "Aura Architecture",
-        subtitle: "Minimalist digital spaces for architectural firms.",
-        image: "images/projects/1.png",
-        description: "A comprehensive digital transformation for a leading architectural studio, focusing on clean lines and immersive project galleries."
+        title: "RefillPro App",
+        subtitle: "Mobile App for Refill Stations",
+        image: "images/projects/refillpro.png",
+        description: "The all-in-one POS solution to manage your water refilling station and simplify customer orders in one seamless platform."
     },
     {
-        title: "Essence Coffee",
-        subtitle: "Premium mobile experience for the modern connoisseur.",
-        image: "images/projects/2.png",
-        description: "Redefining the mobile ordering experience with an elegant dark-mode interface and fluid transition animations."
+        title: "Socia Landing Page",
+        subtitle: "Company Landing Page",
+        image: "images/projects/project1.png",
+        description: "A modern, responsive landing page for a socia media management company, featuring a clean design and intuitive user experience."
     },
     {
-        title: "Flux Analytics",
-        subtitle: "Sophisticated data visualization for SaaS.",
-        image: "images/projects/3.png",
-        description: "A complex data dashboard simplified into an intuitive experience, making large data sets accessible and actionable."
+        title: "Modern POS System",
+        subtitle: "POS System for Retail Businesses",
+        image: "images/projects/pos.jpg",
+        description: "A modern, responsive POS system for retail businesses, featuring a clean design and intuitive user experience."
     }
 ];
 

@@ -19,7 +19,7 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      
+
       // Determine visibility
       if (isMenuOpen) {
         setIsVisible(true);
@@ -31,23 +31,23 @@ export default function Header() {
           setIsVisible(true);
         }
       }
-      
+
       setScrolled(scrollY > 0);
       lastScrollY.current = scrollY;
-      
+
       const footerElement = document.getElementById('contact');
       // Calculate absolute position even if nested
       const footerTop = footerElement
         ? footerElement.getBoundingClientRect().top + scrollY
         : document.documentElement.scrollHeight;
-      
+
       // We are over the "Light" sections if we've scrolled past the hero 
       // AND we haven't reached the footer yet.
       // Since Hero is h-screen, its bottom is at window.innerHeight
       const heroBottom = window.innerHeight;
-      
+
       const isHeaderInLightZone = scrollY > (heroBottom - 100) && scrollY < (footerTop - 100);
-      
+
       setIsOverLight(isHeaderInLightZone);
     };
 
@@ -89,9 +89,25 @@ export default function Header() {
     };
   }, [isMenuOpen]);
 
+  const scrollToContact = () => {
+    const contactElement = document.getElementById('contact');
+    if (contactElement) {
+      const scrollValue = window.scrollY;
+      const targetValue = contactElement.getBoundingClientRect().top + scrollValue;
+
+      animate(scrollValue, targetValue, {
+        type: "spring",
+        stiffness: 100,
+        damping: 30,
+        mass: 1,
+        onUpdate: (latest) => window.scrollTo(0, latest)
+      });
+    }
+  };
+
   return (
-    <header 
-      ref={headerRef} 
+    <header
+      ref={headerRef}
       className={`fixed top-0 left-0 right-0 z-50 pointer-events-none p-4 transition-transform duration-500 ease-in-out ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
     >
       {/* Top Navbar Pill */}
@@ -134,7 +150,7 @@ export default function Header() {
             }}
           >
             {/* Background Shape */}
-            <div className="absolute inset-0 shadow-md transition-all duration-300">
+            <div className="absolute inset-0 transition-all duration-300">
               <Shape className="w-full h-full" fill={isMenuOpen ? "white" : "#0B2D72"} />
             </div>
 
@@ -145,7 +161,11 @@ export default function Header() {
           </Link>
 
           <div className="absolute right-8 top-4">
-            <Button size="sm" variant={isMenuOpen ? "inverse" : "primary"}>
+            <Button
+              size="sm"
+              variant={isMenuOpen ? "inverse" : "primary"}
+              onClick={scrollToContact}
+            >
               Let's work together
             </Button>
           </div>
@@ -229,8 +249,16 @@ export default function Header() {
                       </div>
                     </div>
                   </div>
-                  <div className="pt-4">
-                    <Button size="lg" className="w-full md:w-auto px-10" variant="inverse">
+                  <div className="pt-4 text-left">
+                    <Button
+                      size="lg"
+                      className="w-full md:w-auto px-10"
+                      variant="inverse"
+                      onClick={() => {
+                        toggleMenu();
+                        scrollToContact();
+                      }}
+                    >
                       Send Message
                     </Button>
                   </div>
@@ -242,28 +270,28 @@ export default function Header() {
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
                     <div className="group relative overflow-hidden bg-muted aspect-[4/3]">
                       <img
-                        src="/images/projects/1.png"
+                        src="/images/projects/refillpro.png"
                         alt="Project Showcase 1"
                         className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="bg-background/90 backdrop-blur-sm px-4 py-2 flex justify-between items-center transition-transform duration-500 translate-y-2 group-hover:translate-y-0">
-                          <span className="text-sm font-semibold text-foreground uppercase tracking-wider">E-Commerce</span>
+                          <span className="text-sm font-semibold text-foreground uppercase tracking-wider">POS Mobile App</span>
                           <span className="text-[10px] text-muted-foreground uppercase">2024</span>
                         </div>
                       </div>
                     </div>
                     <div className="group relative overflow-hidden bg-muted aspect-[4/3]">
                       <img
-                        src="/images/projects/2.png"
+                        src="/images/projects/pos.jpg"
                         alt="Project Showcase 2"
                         className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-500" />
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="bg-background/90 backdrop-blur-sm px-4 py-2 flex justify-between items-center transition-transform duration-500 translate-y-2 group-hover:translate-y-0">
-                          <span className="text-sm font-semibold text-foreground uppercase tracking-wider">Task App</span>
+                          <span className="text-sm font-semibold text-foreground uppercase tracking-wider">Modern POS System</span>
                           <span className="text-[10px] text-muted-foreground uppercase">2024</span>
                         </div>
                       </div>

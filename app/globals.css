@@ -63,7 +63,7 @@
   }
 
   *:focus-visible {
-    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+    @apply outline-none ring-0;
   }
 
   button,

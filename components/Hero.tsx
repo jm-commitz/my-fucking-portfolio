@@ -26,9 +26,15 @@ export default function Hero() {
       <p className="mt-4 text-sm sm:text-base md:text-lg text-muted-foreground break-words max-w-full">Aspiring full stack dev in the making. I build things that actually work (and look good doing it).
       </p>
       <div className="flex flex-row gap-4">
-        <Button className="mt-8">
-          Download CV?
-        </Button>
+        <a
+          href="/cv/AnchetaJaymarkResume.pdf"
+          download="AnchetaJaymarkResume.pdf"
+          className="inline-block"
+        >
+          <Button className="mt-8">
+            Download CV?
+          </Button>
+        </a>
         <Button
           className="mt-8"
           variant="ghost"
