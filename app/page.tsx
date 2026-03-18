@@ -22,11 +22,12 @@ export default function Home() {
   const heroOffset = useTransform(scrollYProgress, [0, 0.5], ["0%", "-20%"]);
 
   return (
-    <main ref={containerRef} className="relative bg-background">
+    <main id="home" ref={containerRef} className="relative bg-background">
       <Header />
 
       {/* Hero Section Container - Sticky */}
       <motion.div
+        id="hero"
         style={{ y: heroOffset }}
         className="sticky top-0 h-screen w-full flex overflow-hidden z-0"
       >

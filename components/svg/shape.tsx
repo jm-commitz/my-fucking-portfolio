@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Shape({ className = "" }: { className?: string }) {
+export default function Shape({ className = "", fill = "#0B2D72" }: { className?: string; fill?: string }) {
     return (
         <svg
             width="100"
@@ -10,7 +10,7 @@ export default function Shape({ className = "" }: { className?: string }) {
             xmlns="http://www.w3.org/2000/svg"
             className={className}
         >
-            <rect width="100" height="100" fill="#0B2D72" />
+            <rect width="100" height="100" fill={fill} />
         </svg>
     );
 }
