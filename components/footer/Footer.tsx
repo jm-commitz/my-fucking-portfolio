@@ -47,7 +47,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="flex flex-col items-start lg:items-end gap-4">
-          <a href="mailto:anchetajaymark69@gmail.com" className="font-[family-name:var(--D)] text-[1.5rem] text-[var(--fg2)] no-underline transition-colors duration-200 hover:text-[var(--yellow)]">anchetajaymark69@gmail.com ↗</a>
+          <a href="mailto:anchetajaymark69@gmail.com" className="font-[family-name:var(--D)] text-[1.5rem] text-[var(--fg2)] no-underline transition-colors duration-200 hover:text-[var(--yellow)]">anchetajaymark69@gmail.com</a>
           <div className="flex flex-col gap-3 items-start lg:items-end mt-2">
             {socials.map((s, i) => (
               <a
