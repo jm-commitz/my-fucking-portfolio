@@ -116,12 +116,12 @@ export default function FeaturedProjects() {
 
               {/* MOBILE CARD VIEW (As requested, uses the full card on small screens) */}
               <div className="lg:hidden block py-8 border-b border-[var(--fg)]/[0.07]">
-                <div className="bg-[var(--bg2)] border border-[var(--fg)]/[0.1] overflow-hidden rounded-sm shadow-xl">
+                <div className="bg-[var(--bg2)] border-transparent [[data-theme='light']_&]:border-[var(--fg)]/[0.1] border overflow-hidden rounded-sm shadow-xl transition-colors duration-300">
                   <div className="w-full overflow-hidden relative">
                     <img src={p.img} alt={p.name} className="w-full h-auto object-contain" />
                     <div className="absolute top-4 left-4 flex gap-2">
                       <div className="bg-[var(--red)] px-2.5 py-1 text-[0.55rem] font-bold uppercase tracking-widest text-[#fff]">{p.year}</div>
-                      <div className="bg-[var(--fg)]/[0.1] backdrop-blur-md px-2.5 py-1 text-[0.55rem] font-bold uppercase tracking-widest text-[var(--fg)] border border-[var(--fg)]/[0.2]">SELECTED</div>
+                      <div className="bg-[var(--fg)]/[0.1] [[data-theme='light']_&]:bg-[var(--fg)]/[0.05] backdrop-blur-md px-2.5 py-1 text-[0.55rem] font-bold uppercase tracking-widest text-[var(--fg)] border border-[var(--fg)]/[0.2] transition-colors duration-300">SELECTED</div>
                     </div>
                   </div>
                   <div className="p-8 space-y-6">
@@ -132,7 +132,7 @@ export default function FeaturedProjects() {
                     </div>
                     <div className="flex flex-wrap gap-2 pt-4 border-t border-[var(--fg)]/[0.08]">
                       {p.techs.map(t => (
-                        <span key={t} className="text-[0.45rem] text-[var(--fg2)] font-bold uppercase tracking-[0.2em] px-2 py-1 bg-[var(--bg3)] border border-[var(--fg)]/[0.1]">{t}</span>
+                        <span key={t} className="text-[0.45rem] text-[var(--fg2)] font-bold uppercase tracking-[0.2em] px-2 py-1 bg-[var(--bg3)] border border-[var(--fg)]/[0.1] transition-colors duration-300">{t}</span>
                       ))}
                     </div>
                     <div className="flex items-center gap-4 pt-2">
@@ -169,7 +169,7 @@ export default function FeaturedProjects() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -10, scale: 0.98 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="bg-[var(--bg2)] border border-[var(--fg)]/[0.1] overflow-hidden rounded-sm shadow-2xl"
+              className="bg-[var(--bg2)] border-transparent [[data-theme='light']_&]:border-[var(--fg)]/[0.1] border overflow-hidden rounded-sm shadow-2xl transition-colors duration-300"
             >
               {/* Card Image */}
               <div className="w-full overflow-hidden relative group">
@@ -180,7 +180,7 @@ export default function FeaturedProjects() {
                 />
                 <div className="absolute top-6 left-6 flex gap-3">
                   <div className="bg-[var(--red)] px-3 py-1 text-[0.6rem] font-bold uppercase tracking-widest text-[#fff]">{projects[hoveredIndex].year}</div>
-                  <div className="bg-[var(--fg)]/[0.1] backdrop-blur-md px-3 py-1 text-[0.6rem] font-bold uppercase tracking-widest text-[var(--fg)] border border-[var(--fg)]/[0.2] font-[family-name:var(--M)]">SELECTED</div>
+                   <div className="bg-[var(--fg)]/[0.1] [[data-theme='light']_&]:bg-[var(--fg)]/[0.05] backdrop-blur-md px-3 py-1 text-[0.6rem] font-bold uppercase tracking-widest text-[var(--fg)] border border-[var(--fg)]/[0.2] transition-colors duration-300 font-[family-name:var(--M)]">SELECTED</div>
                 </div>
               </div>
 
@@ -193,7 +193,7 @@ export default function FeaturedProjects() {
 
                 <div className="flex flex-wrap gap-2 pt-6 border-t border-[var(--fg)]/[0.08]">
                   {projects[hoveredIndex].techs.map(t => (
-                    <span key={t} className="text-[0.5rem] text-[var(--fg2)] font-bold uppercase tracking-[0.2em] px-3 py-1 bg-[var(--bg3)] border border-[var(--fg)]/[0.1]">{t}</span>
+                    <span key={t} className="text-[0.5rem] text-[var(--fg2)] font-bold uppercase tracking-[0.2em] px-3 py-1 bg-[var(--bg3)] border border-[var(--fg)]/[0.1] transition-colors duration-300">{t}</span>
                   ))}
                 </div>
 
