@@ -40,6 +40,16 @@ html {
   scroll-behavior: smooth;
 }
 
+::-moz-selection {
+  background: var(--red);
+  color: white;
+}
+
+::selection {
+  background: var(--red);
+  color: white;
+}
+
 body::after {
   content: '';
   position: fixed;

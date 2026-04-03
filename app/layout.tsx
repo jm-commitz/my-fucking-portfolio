@@ -27,6 +27,8 @@ const anton = Anton({
   variable: "--font-anton",
 });
 
+import Cursor from "@/components/ui/Cursor";
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://jmfolio.vercel.app'),
   title: "PORTFOLIO | JM",
@@ -67,7 +69,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`dark ${bebasNeue.variable} ${spaceMono.variable} ${permanentMarker.variable} ${anton.variable}`}>
-      <body className="font-mono antialiased overflow-x-hidden cursor-none bg-[var(--bg)] text-[var(--fg)]">
+      <body className="font-mono antialiased overflow-x-hidden cursor-none bg-[var(--bg)] text-[var(--fg)] relative">
+        <Cursor />
         {children}
       </body>
     </html>

@@ -38,7 +38,7 @@ export default function Home() {
       <Nav />
       <Hero />
       <Ticker
-        items={['FLUTTER', 'LARAVEL', 'NEXT.JS', 'NODE.JS', 'MYSQL', 'REACT.JS', 'DOCKER', 'VERCEL', 'TAILWIND', 'EXPO', 'TYPESCRIPT']}
+        items={['DESIGNT', 'DEVELOPMENT', 'PERFORMANCE', 'SEO', 'CONVERSION', 'STRATEGY', 'DESIGN', 'DEVELOPMENT', 'PERFORMANCE', 'SEO', 'CONVERSION']}
         theme="red"
         emIcon="★"
       />
