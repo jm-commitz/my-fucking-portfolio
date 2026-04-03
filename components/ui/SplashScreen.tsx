@@ -12,7 +12,7 @@ export default function SplashScreen({ finishLoading }: { finishLoading: () => v
         if (prev >= 100) {
           clearInterval(interval);
           // Small delay before sliding up for impact
-          setTimeout(finishLoading, 400); 
+          setTimeout(finishLoading, 400);
           return 100;
         }
         // Random larger jumps to make it look active
@@ -50,18 +50,13 @@ export default function SplashScreen({ finishLoading }: { finishLoading: () => v
             />
           ))}
         </div>
-        
+
         {/* Loading Text */}
         <div className="flex flex-col items-center gap-1 font-[family-name:var(--M)]">
-            <div className="text-[0.8rem] tracking-[0.4em] uppercase font-bold">
-              LOAD - {progress}%
-            </div>
+          <div className="text-[0.8rem] tracking-[0.4em] uppercase font-bold">
+            LOAD - {progress}%
+          </div>
         </div>
-      </div>
-
-      {/* Decorative side bar */}
-      <div className="absolute bottom-10 left-10 text-[0.5rem] tracking-[0.3em] font-bold uppercase opacity-30 font-[family-name:var(--M)]">
-        VER_2.4.0_STABLE
       </div>
     </motion.div>
   );
