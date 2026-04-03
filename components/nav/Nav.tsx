@@ -29,8 +29,8 @@ export default function Nav() {
     <nav
       className={`fixed top-0 left-0 right-0 z-[900] flex justify-between items-center px-6 md:px-10 transition-all duration-500 backdrop-blur-md bg-[var(--bg)]/94 ${scrolled ? 'py-3' : 'py-[1.1rem]'} ${isVisible ? 'translate-y-0' : '-translate-y-full opacity-0'}`}
     >
-      <a href="#" className="hover-trigger font-[family-name:var(--D)] text-[1.9rem] text-[var(--fg)] no-underline tracking-[0.06em]">
-        JA<b className="text-[#ff1919]"></b>
+      <a href="#" className="hover-trigger flex items-center justify-center w-[40px] h-[40px] bg-[#ff1919] transition-all duration-500 hover:bg-[#f5ff00] hover:scale-105 font-[family-name:var(--D)] text-[1.4rem] text-[var(--bg)] hover:text-black no-underline tracking-normal group pt-1">
+        JA
       </a>
       <ul className="hidden md:flex gap-10 list-none m-0 p-0 items-center">
         <li><a href="#arsenal" className="hover-trigger text-[0.68rem] text-[#777] uppercase tracking-[0.2em] relative transition-colors duration-200 hover:text-[#f5ff00] pb-1 border-b border-transparent hover:border-[#f5ff00]">Services</a></li>

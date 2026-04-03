@@ -29,10 +29,15 @@ const anton = Anton({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://jmfolio.vercel.app'),
-  title: "JM — Full-Stack & Mobile Developer",
+  title: "PORTFOLIO | JM",
   description: "I build SaaS platforms, mobile apps, and web systems.",
+  icons: {
+    icon: '/images/logo/logo.png',
+    shortcut: '/images/logo/logo.png',
+    apple: '/images/logo/logo.png',
+  },
   openGraph: {
-    title: "JM — Full-Stack & Mobile Developer",
+    title: "Full-Stack & Mobile Developer",
     description: "I build SaaS platforms, mobile apps, and web systems.",
     url: 'https://jmfolio.vercel.app',
     siteName: 'JM Portfolio',
@@ -49,7 +54,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "JM — Full-Stack & Mobile Developer",
+    title: "Full-Stack & Mobile Developer",
     description: "I build SaaS platforms, mobile apps, and web systems.",
     images: ['/images/metatags/metatags.png'],
   },
