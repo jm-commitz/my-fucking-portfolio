@@ -1,11 +1,17 @@
 "use client";
 
-import { useEffect, ReactNode } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import Lenis from "lenis";
+import { AnimatePresence } from "framer-motion";
 import "lenis/dist/lenis.css";
+import SplashScreen from "./SplashScreen";
 
 export default function SmoothScroll({ children }: { children: ReactNode }) {
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    if (loading) return;
+
     // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.2,
@@ -30,7 +36,16 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       // Clean up
       lenis.destroy();
     };
-  }, []);
+  }, [loading]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <AnimatePresence mode="wait">
+        {loading && <SplashScreen finishLoading={() => setLoading(false)} />}
+      </AnimatePresence>
+      <div className={loading ? "overflow-hidden h-screen" : ""}>
+        {children}
+      </div>
+    </>
+  );
 }
