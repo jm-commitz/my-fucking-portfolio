@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -169,6 +169,59 @@ function CategoryFilterDropdown({
   );
 }
 
+function CarouselThumbnailStrip({
+  projects,
+  selected,
+  scrollTo,
+  indicatorLayoutId,
+}: {
+  projects: ShowcaseProject[];
+  selected: number;
+  scrollTo: (i: number) => void;
+  indicatorLayoutId: string;
+}) {
+  return (
+    <div className="mx-auto flex w-max max-w-full flex-nowrap justify-center gap-x-1.5 px-0.5 sm:gap-x-2 md:mx-auto md:justify-center">
+      {projects.map((p, i) => (
+        <div
+          key={p.slug}
+          role="button"
+          tabIndex={0}
+          aria-label={p.name}
+          aria-selected={i === selected}
+          onMouseEnter={() => scrollTo(i)}
+          onFocus={() => scrollTo(i)}
+          onClick={() => scrollTo(i)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              scrollTo(i);
+            }
+          }}
+          className="group flex w-11 shrink-0 cursor-pointer flex-col items-center gap-0.5 sm:w-12"
+        >
+          <div
+            className={`relative h-7 w-full overflow-hidden bg-[var(--fg2)]/15 transition-all duration-500 sm:h-8 ${
+              selected === i ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
+            }`}
+          >
+            <img src={p.img} alt="" className="h-full w-full object-cover object-center" />
+          </div>
+          <div className="flex h-2 w-full items-center justify-center" aria-hidden>
+            {selected === i && (
+              <motion.div
+                layoutId={indicatorLayoutId}
+                className="h-1.5 w-1.5 bg-[var(--primary)]"
+                transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 1 }}
+              />
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function ShowcaseGridView({
   projects,
   columns,
@@ -202,19 +255,19 @@ function ShowcaseGridView({
             href={`/projects/${project.slug}`}
             className="group block cursor-view-project focus:outline-none focus-visible:[&_img]:brightness-110"
           >
-            <div className="relative aspect-[4/3] w-full overflow-hidden bg-[var(--fg2)]/10 sm:aspect-video">
+            <div className="relative aspect-video w-full overflow-hidden bg-[var(--fg2)]/10">
               <img
                 src={project.img}
                 alt={project.name}
-                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
+                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
               />
               <div className="pointer-events-none absolute inset-0 bg-black/[0.06]" />
             </div>
-            <div className="mt-4 flex items-baseline justify-between gap-4 font-[family-name:var(--M)] text-[0.62rem] uppercase tracking-[0.2em] text-[var(--fg2)] sm:text-[0.65rem]">
+            <div className="flex items-baseline justify-between gap-4 px-4 py-3 font-[family-name:var(--M)] text-[0.62rem] uppercase tracking-[0.2em] text-[var(--fg2)] max-md:items-center max-md:text-[0.65rem] sm:text-[0.65rem] md:mt-4 md:px-0 md:py-0">
               <span className="min-w-0 text-[var(--fg)] transition-colors group-hover:text-[var(--primary)]">
                 {project.name}
               </span>
-              <span className="shrink-0 tabular-nums">{project.year}</span>
+              <span className="shrink-0 tabular-nums text-[var(--fg)]">{project.year}</span>
             </div>
           </Link>
         </motion.article>
@@ -276,7 +329,7 @@ function ShowcaseCarouselView({
 
   return (
     <>
-      <div className="relative z-20 mb-8 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-10 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-end md:gap-y-4 md:gap-x-6">
+      <div className="relative z-20 mb-8 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-10 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-start md:gap-y-4 md:gap-x-6">
         <div className="col-start-1 row-start-1 justify-self-start">
           <CategoryFilterDropdown
             value={categoryFilter}
@@ -292,44 +345,12 @@ function ShowcaseCarouselView({
             </p>
           ) : (
             <div className="hidden min-w-0 lg:block">
-              <div className="mx-auto flex w-max max-w-full flex-nowrap justify-center gap-x-4 px-1 md:mx-auto md:justify-center">
-                {projects.map((p, i) => (
-                  <div
-                    key={p.slug}
-                    role="button"
-                    tabIndex={0}
-                    aria-label={p.name}
-                    aria-selected={i === selected}
-                    onMouseEnter={() => scrollTo(i)}
-                    onFocus={() => scrollTo(i)}
-                    onClick={() => scrollTo(i)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        scrollTo(i);
-                      }
-                    }}
-                    className="group flex w-[4.25rem] shrink-0 cursor-pointer flex-col items-center gap-2 sm:w-[4.75rem]"
-                  >
-                    <div
-                      className={`relative h-11 w-full overflow-hidden bg-[var(--fg2)]/15 transition-all duration-500 sm:h-12 ${
-                        selected === i ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
-                      }`}
-                    >
-                      <img src={p.img} alt="" className="h-full w-full object-cover object-center" />
-                    </div>
-                    <div className="flex h-3 w-full items-center justify-center" aria-hidden>
-                      {selected === i && (
-                        <motion.div
-                          layoutId="projects-page-indicator"
-                          className="h-2.5 w-2.5 bg-[var(--primary)]"
-                          transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 1 }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <CarouselThumbnailStrip
+                projects={projects}
+                selected={selected}
+                scrollTo={scrollTo}
+                indicatorLayoutId="projects-carousel-indicator-lg"
+              />
             </div>
           )}
         </div>
@@ -345,7 +366,7 @@ function ShowcaseCarouselView({
             type="button"
             aria-label="Previous project"
             onClick={scrollPrev}
-            className="absolute left-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--primary)] text-white shadow-md transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 md:left-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
+            className="absolute left-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-white/20 bg-white/10 text-[var(--primary)] shadow-md shadow-black/25 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-white/[0.16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50 md:left-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
           >
             <ChevronLeft className="h-6 w-6" strokeWidth={1.25} />
           </button>
@@ -353,7 +374,7 @@ function ShowcaseCarouselView({
             type="button"
             aria-label="Next project"
             onClick={scrollNext}
-            className="absolute right-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--primary)] text-white shadow-md transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 md:right-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
+            className="absolute right-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center border border-white/20 bg-white/10 text-[var(--primary)] shadow-md shadow-black/25 backdrop-blur-md transition-colors hover:border-white/30 hover:bg-white/[0.16] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50 md:right-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
           >
             <ChevronRight className="h-6 w-6" strokeWidth={1.25} />
           </button>
@@ -393,13 +414,24 @@ function ShowcaseCarouselView({
               ))}
             </div>
           </div>
+          <nav
+            className="scrollbar-hide mt-3 overflow-x-auto px-6 pb-0.5 sm:mt-4 md:px-10 md:pb-1 lg:hidden"
+            aria-label="Projects in carousel"
+          >
+            <CarouselThumbnailStrip
+              projects={projects}
+              selected={selected}
+              scrollTo={scrollTo}
+              indicatorLayoutId="projects-carousel-indicator-sm"
+            />
+          </nav>
         </div>
       )}
     </>
   );
 }
 
-/** Tailwind `md` — viewports below this use carousel as the default layout. */
+/** Tailwind `md` — below this width, layout snaps to carousel when the viewport changes. */
 const MD_MIN_WIDTH = 768;
 /** Tailwind `lg` — three-column grid toggle only from this width up. */
 const LG_MIN_WIDTH = 1024;
@@ -407,13 +439,6 @@ const LG_MIN_WIDTH = 1024;
 export default function ProjectsPageShowcase({ projects }: ProjectsPageShowcaseProps) {
   const [layout, setLayout] = useState<LayoutMode>('carousel');
   const [categoryFilter, setCategoryFilter] = useState('all');
-
-  useLayoutEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (window.matchMedia(`(min-width: ${MD_MIN_WIDTH}px)`).matches) {
-      setLayout('grid-2');
-    }
-  }, []);
 
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MD_MIN_WIDTH - 1}px)`);
@@ -473,7 +498,7 @@ export default function ProjectsPageShowcase({ projects }: ProjectsPageShowcaseP
         />
       ) : (
         <>
-          <div className="relative z-20 mb-10 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-14 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-end md:gap-y-4 md:gap-x-6">
+          <div className="relative z-20 mb-10 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-14 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-start md:gap-y-4 md:gap-x-6">
             <div className="col-start-1 row-start-1 justify-self-start">
               <CategoryFilterDropdown
                 value={categoryFilter}

@@ -1,9 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type CarouselProject = {
   slug: string;
@@ -26,9 +25,6 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
   });
   const [selected, setSelected] = useState(0);
 
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
-
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
@@ -45,8 +41,8 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
 
   return (
     <section className="relative w-full">
-      {/* Thumbnails + arrows — centered */}
-      <div className="mx-auto mb-8 hidden w-full max-w-[1600px] flex-col items-center gap-6 px-4 sm:px-6 md:mb-10 md:flex md:flex-col lg:px-10">
+      {/* Thumbnails — centered */}
+      <div className="mx-auto mb-8 hidden w-full max-w-[1600px] flex-col items-center px-4 sm:px-6 md:mb-10 md:flex md:flex-col lg:px-10">
         <div
           className="flex max-w-full flex-wrap justify-center gap-2 pb-3"
           role="tablist"
@@ -80,26 +76,6 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
               />
             </button>
           ))}
-        </div>
-
-        <div className="flex shrink-0 justify-center gap-0 border border-[var(--fg2)]/20">
-          <button
-            type="button"
-            aria-label="Previous project"
-            onClick={scrollPrev}
-            className="flex h-10 w-10 items-center justify-center text-[var(--fg)] transition-colors hover:bg-[var(--fg2)]/10 hover:text-[var(--primary)] md:h-11 md:w-11"
-          >
-            <ChevronLeft className="h-5 w-5" strokeWidth={1.25} />
-          </button>
-          <span className="w-px bg-[var(--fg2)]/20" aria-hidden />
-          <button
-            type="button"
-            aria-label="Next project"
-            onClick={scrollNext}
-            className="flex h-10 w-10 items-center justify-center text-[var(--fg)] transition-colors hover:bg-[var(--fg2)]/10 hover:text-[var(--primary)] md:h-11 md:w-11"
-          >
-            <ChevronRight className="h-5 w-5" strokeWidth={1.25} />
-          </button>
         </div>
       </div>
 
