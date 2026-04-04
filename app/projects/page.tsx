@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { projects } from '@/components/featuredProjects/projectsData';
-import ProjectsCarousel from '@/components/projects/ProjectsCarousel';
+import ProjectsPageShowcase from '@/components/projects/ProjectsPageShowcase';
 import Nav from '@/components/nav/Nav';
 import Footer from '@/components/footer/Footer';
 
@@ -15,6 +15,7 @@ export default function ProjectsIndexPage() {
     name: p.name,
     year: p.year,
     img: p.img,
+    category: p.category,
   }));
 
   return (
@@ -22,16 +23,8 @@ export default function ProjectsIndexPage() {
       <div className="h-scan opacity-[0.4]" />
       <Nav />
 
-      <div className="relative z-10 mx-auto max-w-[1600px] px-4 pb-10 pt-24 sm:px-6 md:px-10 md:pb-14 md:pt-28">
-        <header className="mb-8 text-center md:mb-10">
-          <h1 className="mx-auto font-[family-name:var(--D)] text-[clamp(2.25rem,8vw,4.5rem)] uppercase leading-none tracking-tighter">
-            All projects
-          </h1>
-        </header>
-      </div>
-
-      <div className="relative z-10 pb-20 md:pb-28">
-        <ProjectsCarousel projects={carouselProjects} />
+      <div className="relative z-10 pb-20 pt-24 md:pb-28 md:pt-28">
+        <ProjectsPageShowcase projects={carouselProjects} />
       </div>
 
       <Footer />

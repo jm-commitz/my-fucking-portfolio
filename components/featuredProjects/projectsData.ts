@@ -1,8 +1,17 @@
+/** High-level type for /projects filter (Dashboard, Landing page, etc.) */
+export type ProjectCategory =
+  | 'Dashboard'
+  | 'Landing page'
+  | 'Booking platform'
+  | 'POS'
+  | 'Rental platform';
+
 export type Project = {
   slug: string;
   num: string;
   name: string;
   img: string;
+  category: ProjectCategory;
   techs: string[];
   year: string;
   shortDesc: string;
@@ -17,6 +26,7 @@ export const projects: Project[] = [
     num: "01",
     name: "OMNICHANNEL SALES DASHBOARD",
     img: "/images/projects/omnichannel.png",
+    category: "Dashboard",
     techs: ["React.js", "Zustand", "TanStack Query", "Laravel", "MySQL"],
     year: "2025",
     shortDesc:
@@ -38,6 +48,7 @@ export const projects: Project[] = [
     num: "02",
     name: "MRP + INVENTORY + POS SYSTEM",
     img: "/images/projects/inventory.png",
+    category: "Dashboard",
     techs: ["React.js", "Zustand", "TanStack Query", "Laravel"],
     year: "2025",
     shortDesc:
@@ -59,6 +70,7 @@ export const projects: Project[] = [
     num: "03",
     name: "COMPANY LANDING PAGE",
     img: "/images/projects/landing.png",
+    category: "Landing page",
     techs: ["Next.js", "Tailwind CSS"],
     year: "2026",
     shortDesc:
@@ -80,6 +92,7 @@ export const projects: Project[] = [
     num: "04",
     name: "AIRBNB BOOKING SYSTEM",
     img: "/images/projects/airbnb.png",
+    category: "Booking platform",
     techs: ["Next.js", "Node.js", "Prisma"],
     year: "2026",
     shortDesc:
@@ -101,6 +114,7 @@ export const projects: Project[] = [
     num: "05",
     name: "MULTI-TENANT POS SYSTEM",
     img: "/images/projects/salepoint.png",
+    category: "POS",
     techs: ["Flutter", "Laravel", "MySQL"],
     year: "2026",
     shortDesc:
@@ -124,6 +138,7 @@ export const projects: Project[] = [
     num: "06",
     name: "WATER REFILLING POS & DELIVERY",
     img: "/images/projects/refillpro.png",
+    category: "POS",
     techs: ["Flutter", "Laravel"],
     year: "2024",
     shortDesc:
@@ -143,12 +158,13 @@ export const projects: Project[] = [
   {
     slug: "condo-rental-system",
     num: "07",
-    name: "CONDO RENTAL SYSTEM",
+    name: "REAL STATE MANAGEMENT SYSTEM",
     img: "/images/projects/dale.png",
+    category: "Rental platform",
     techs: ["Next.js", "Laravel", "MySQL"],
     year: "2026",
     shortDesc:
-      "Rental platform with both landing page and admin dashboard for condo units.",
+      "Rental platform with both landing page and admin dashboard for real estate properties.",
     clientProblem:
       "Property owner needed a way to market condo units and track bookings and tenants without relying only on listing platforms.",
     solution:
