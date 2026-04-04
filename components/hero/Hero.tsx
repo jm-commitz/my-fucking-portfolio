@@ -1,25 +1,12 @@
 'use client';
 import { useEffect, useRef } from 'react';
+import HeroAsideVisual from './HeroAsideVisual';
+import HeroTechStack from './HeroTechStack';
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const blocks = document.querySelectorAll<HTMLElement>('.h-block');
-    const handleMouseMove = (e: MouseEvent) => {
-      const cx = e.clientX / window.innerWidth - 0.5;
-      const cy = e.clientY / window.innerHeight - 0.5;
-      blocks.forEach(b => {
-        const spd = parseFloat(b.dataset.spd || "1");
-        const axis = b.dataset.axis || 'xy';
-        const dx = axis.includes('x') ? cx * spd * 30 : 0;
-        const dy = axis.includes('y') ? cy * spd * 30 : 0;
-        b.style.transform = `translate(${dx}px,${dy}px) ${b.classList.contains('hb3') ? 'rotate(15deg)' : b.classList.contains('hb4') ? 'rotate(-8deg)' : ''}`;
-      });
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -61,7 +48,6 @@ export default function Hero() {
     document.querySelectorAll('.stat-n[data-count]').forEach(el => countObs.observe(el));
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
       obs.disconnect();
       countObs.disconnect();
     };
@@ -69,45 +55,40 @@ export default function Hero() {
 
   return (
     <section ref={heroRef} className="hero" id="home">
-      <div className="h-ghost">DEVELOPER</div>
-      <div className="h-scan"></div>
-
-      <div className="h-block hb1" data-spd="2.5" data-axis="y"></div>
-      <div className="h-block hb2" data-spd="-2" data-axis="x"></div>
-      <div className="h-block hb3" data-spd="1.5" data-axis="xy"></div>
-      <div className="h-block hb4" data-spd="-3" data-axis="y"></div>
-      <div className="h-block hb5" data-spd="1" data-axis="x"></div>
-
-      <div className="h-sticker hs-ready">READY?</div>
-      <div className="h-sticker hs-cross">×</div>
-      <div className="h-sticker hs-note">// PHL</div>
-      <div className="h-barcode"></div>
-
-      <div className="h-content">
-        <div className="avail reveal"><span className="avail-dot"></span>Available for Projects</div>
-        <h1 className="h-title">
-          <span className="hl1 reveal" data-d="0.05">BUILDING</span>
-          <span className="hl2 glitch reveal" data-g="PRODUCTS" data-d="0.1">PRODUCTS</span>
-          <span className="hl3 reveal" data-d="0.15">THAT WORK.</span>
-        </h1>
-        <p className="h-desc reveal" data-d="0.2">Full-stack and mobile developer based in the Philippines. I build SaaS platforms, mobile apps, and web systems for businesses that need real solutions — not cookie-cutter templates.</p>
-        <div
-          className="h-btns reveal !gap-2 sm:!gap-3 md:!gap-[0.8rem]"
-          data-d="0.25"
-        >
-          <a
-            href="#projects"
-            className="btn-y hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+      <div className="h-inner">
+        <div className="h-col h-col-main">
+          {/* <div className="avail reveal"><span className="avail-dot"></span>Available for Projects</div> */}
+          <h1 className="h-title">
+            <span className="hl1 reveal" data-d="0.05">Launch Faster.</span>
+            <span className="hl2 reveal" data-d="0.1">Build Smarter.</span>
+          </h1>
+          <p className="h-desc reveal" data-d="0.2">
+            <span className="h-desc-line">Full-stack development designed for speed and scalability, <br />
+built around real-world use,
+from architecture to launch.</span>
+          </p>
+          <div
+            className="h-btns reveal !gap-2 sm:!gap-3 md:!gap-[0.8rem]"
+            data-d="0.25"
           >
-            See My Work →
-          </a>
-          <a
-            href="mailto:anchetajaymark69@gmail.com"
-            className="btn-o hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
-          >
-            Get In Touch
-          </a>
+            <a
+              href="#projects"
+              className="btn-y hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+            >
+              See My Work →
+            </a>
+            <a
+              href="mailto:anchetajaymark69@gmail.com"
+              className="btn-o hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+            >
+              Get In Touch
+            </a>
+          </div>
         </div>
+        <div className="h-col h-col-aside">
+          <HeroAsideVisual />
+        </div>
+        <HeroTechStack className="reveal" data-d="0.3" />
       </div>
     </section>
   );
