@@ -1,16 +1,16 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import {
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
   GalleryHorizontal,
   Columns2,
   LayoutGrid,
+  ListFilter,
 } from 'lucide-react';
 
 export type ShowcaseProject = {
@@ -48,21 +48,23 @@ function LayoutToggleButtons({
       aria-pressed={layout === mode}
       aria-label={label}
       onClick={() => onChange(mode)}
-      className={`flex h-10 w-10 items-center justify-center transition-colors md:h-11 md:w-11 ${
+      className={`flex h-8 w-8 items-center justify-center transition-colors md:h-9 md:w-9 ${
         layout === mode
           ? 'bg-[var(--primary)] text-white'
           : 'bg-[var(--bg2)]/70 text-[var(--fg)] hover:bg-[var(--bg2)]'
       }`}
     >
-      <Icon className="h-[18px] w-[18px] md:h-5 md:w-5" strokeWidth={1.75} />
+      <Icon className="h-[14px] w-[14px] md:h-4 md:w-4" strokeWidth={1.75} />
     </button>
   );
 
   return (
-    <div className="flex shrink-0 justify-center gap-1 md:justify-end" role="group" aria-label="Project layout">
+    <div className="flex shrink-0 justify-center gap-0.5 md:justify-end" role="group" aria-label="Project layout">
       {item('carousel', 'Carousel layout', GalleryHorizontal)}
       {item('grid-2', 'Two column grid', Columns2)}
-      {item('grid-3', 'Three column grid', LayoutGrid)}
+      <div className="hidden lg:contents">
+        {item('grid-3', 'Three column grid', LayoutGrid)}
+      </div>
     </div>
   );
 }
@@ -103,21 +105,28 @@ function CategoryFilterDropdown({
         : 'All categories';
 
   return (
-    <div ref={rootRef} className="relative shrink-0 justify-self-start md:justify-self-start">
+    <div ref={rootRef} className="relative shrink-0 justify-self-start">
       <button
         type="button"
         aria-expanded={open}
         aria-haspopup="listbox"
-        aria-label={`Category: ${label}`}
+        aria-label={`Filter by category. Current: ${label}`}
         onClick={() => setOpen((o) => !o)}
-        className="flex h-11 min-w-[11rem] items-center justify-between gap-3 bg-[var(--primary)] px-3.5 font-[family-name:var(--M)] text-sm font-bold uppercase tracking-[0.1em] text-white transition-[filter] hover:brightness-110 md:h-12 md:min-w-[13rem] md:text-base md:px-4"
+        className={`relative flex h-8 w-8 shrink-0 items-center justify-center bg-[var(--primary)] text-white transition-[filter] hover:brightness-110 md:h-9 md:w-9 ${
+          open ? 'brightness-110' : ''
+        }`}
       >
-        <span className="truncate">{label}</span>
-        <ChevronDown className={`h-[18px] w-[18px] shrink-0 text-white transition-transform md:h-5 md:w-5 ${open ? 'rotate-180' : ''}`} strokeWidth={1.75} />
+        <ListFilter className="h-[14px] w-[14px] md:h-4 md:w-4" strokeWidth={1.75} aria-hidden />
+        {value !== 'all' && (
+          <span
+            className="absolute right-0.5 top-0.5 h-1 w-1 rounded-full bg-white shadow-sm ring-1 ring-[var(--primary)]"
+            aria-hidden
+          />
+        )}
       </button>
       {open && (
         <ul
-          className="absolute left-0 top-[calc(100%+6px)] z-50 max-h-[min(50vh,280px)] min-w-full overflow-y-auto border-2 border-[var(--primary)] bg-[var(--bg)] py-1 shadow-xl shadow-black/35"
+          className="absolute left-0 top-[calc(100%+6px)] z-50 max-h-[min(50vh,280px)] min-w-[12rem] overflow-y-auto border-2 border-[var(--primary)] bg-[var(--bg)] py-1 shadow-xl shadow-black/35"
           role="listbox"
         >
           <li role="presentation">
@@ -267,70 +276,76 @@ function ShowcaseCarouselView({
 
   return (
     <>
-      <div className="mb-8 grid grid-cols-1 items-end gap-5 md:mb-10 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:gap-4 md:gap-x-6">
-        <CategoryFilterDropdown
-          value={categoryFilter}
-          onChange={onCategoryFilterChange}
-          categories={categoryOptions}
-        />
+      <div className="relative z-20 mb-8 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-10 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-end md:gap-y-4 md:gap-x-6">
+        <div className="col-start-1 row-start-1 justify-self-start">
+          <CategoryFilterDropdown
+            value={categoryFilter}
+            onChange={onCategoryFilterChange}
+            categories={categoryOptions}
+          />
+        </div>
 
-        <div className="min-w-0 justify-self-center overflow-x-auto pb-1 [scrollbar-gutter:stable] md:max-w-full">
+        <div className="scrollbar-hide col-span-2 row-start-2 min-w-0 justify-self-center overflow-x-auto pb-1 md:col-span-1 md:col-start-2 md:row-start-1 md:max-w-full">
           {empty ? (
             <p className="py-2 text-center font-[family-name:var(--M)] text-[0.65rem] uppercase tracking-[0.12em] text-[var(--fg2)] md:py-0">
               No matches
             </p>
           ) : (
-            <div className="mx-auto flex w-max max-w-full flex-nowrap justify-center gap-x-4 px-1 md:mx-auto md:justify-center">
-              {projects.map((p, i) => (
-                <div
-                  key={p.slug}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={p.name}
-                  aria-selected={i === selected}
-                  onMouseEnter={() => scrollTo(i)}
-                  onFocus={() => scrollTo(i)}
-                  onClick={() => scrollTo(i)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      scrollTo(i);
-                    }
-                  }}
-                  className="group flex w-[4.25rem] shrink-0 cursor-pointer flex-col items-center gap-2 sm:w-[4.75rem]"
-                >
+            <div className="hidden min-w-0 lg:block">
+              <div className="mx-auto flex w-max max-w-full flex-nowrap justify-center gap-x-4 px-1 md:mx-auto md:justify-center">
+                {projects.map((p, i) => (
                   <div
-                    className={`relative h-11 w-full overflow-hidden bg-[var(--fg2)]/15 transition-all duration-500 sm:h-12 ${
-                      selected === i ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
-                    }`}
+                    key={p.slug}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={p.name}
+                    aria-selected={i === selected}
+                    onMouseEnter={() => scrollTo(i)}
+                    onFocus={() => scrollTo(i)}
+                    onClick={() => scrollTo(i)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        scrollTo(i);
+                      }
+                    }}
+                    className="group flex w-[4.25rem] shrink-0 cursor-pointer flex-col items-center gap-2 sm:w-[4.75rem]"
                   >
-                    <img src={p.img} alt="" className="h-full w-full object-cover object-center" />
+                    <div
+                      className={`relative h-11 w-full overflow-hidden bg-[var(--fg2)]/15 transition-all duration-500 sm:h-12 ${
+                        selected === i ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
+                      }`}
+                    >
+                      <img src={p.img} alt="" className="h-full w-full object-cover object-center" />
+                    </div>
+                    <div className="flex h-3 w-full items-center justify-center" aria-hidden>
+                      {selected === i && (
+                        <motion.div
+                          layoutId="projects-page-indicator"
+                          className="h-2.5 w-2.5 bg-[var(--primary)]"
+                          transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 1 }}
+                        />
+                      )}
+                    </div>
                   </div>
-                  <div className="flex h-3 w-full items-center justify-center" aria-hidden>
-                    {selected === i && (
-                      <motion.div
-                        layoutId="projects-page-indicator"
-                        className="h-2.5 w-2.5 bg-[var(--primary)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 25, mass: 1 }}
-                      />
-                    )}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        <LayoutToggleButtons layout="carousel" onChange={onLayoutChange} />
+        <div className="col-start-2 row-start-1 justify-self-end md:col-start-3 md:row-start-1">
+          <LayoutToggleButtons layout="carousel" onChange={onLayoutChange} />
+        </div>
       </div>
 
       {!empty && (
-        <div className="relative left-1/2 w-screen max-w-[100vw] -translate-x-1/2">
+        <div className="relative z-0 left-1/2 w-screen max-w-[100vw] -translate-x-1/2">
           <button
             type="button"
             aria-label="Previous project"
             onClick={scrollPrev}
-            className="absolute left-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--bg)]/85 text-[var(--fg)] backdrop-blur-sm transition-colors hover:text-[var(--primary)] md:left-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
+            className="absolute left-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--primary)] text-white shadow-md transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 md:left-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
           >
             <ChevronLeft className="h-6 w-6" strokeWidth={1.25} />
           </button>
@@ -338,7 +353,7 @@ function ShowcaseCarouselView({
             type="button"
             aria-label="Next project"
             onClick={scrollNext}
-            className="absolute right-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--bg)]/85 text-[var(--fg)] backdrop-blur-sm transition-colors hover:text-[var(--primary)] md:right-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
+            className="absolute right-2 top-[min(22vw,28dvh,200px)] z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center bg-[var(--primary)] text-white shadow-md transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/90 md:right-4 md:top-[min(34vh,360px)] md:h-12 md:w-12"
           >
             <ChevronRight className="h-6 w-6" strokeWidth={1.25} />
           </button>
@@ -384,9 +399,41 @@ function ShowcaseCarouselView({
   );
 }
 
+/** Tailwind `md` — viewports below this use carousel as the default layout. */
+const MD_MIN_WIDTH = 768;
+/** Tailwind `lg` — three-column grid toggle only from this width up. */
+const LG_MIN_WIDTH = 1024;
+
 export default function ProjectsPageShowcase({ projects }: ProjectsPageShowcaseProps) {
   const [layout, setLayout] = useState<LayoutMode>('carousel');
   const [categoryFilter, setCategoryFilter] = useState('all');
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia(`(min-width: ${MD_MIN_WIDTH}px)`).matches) {
+      setLayout('grid-2');
+    }
+  }, []);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${MD_MIN_WIDTH - 1}px)`);
+    const snapCarouselOnMobile = () => {
+      if (mql.matches) setLayout('carousel');
+    };
+    snapCarouselOnMobile();
+    mql.addEventListener('change', snapCarouselOnMobile);
+    return () => mql.removeEventListener('change', snapCarouselOnMobile);
+  }, []);
+
+  useEffect(() => {
+    const mql = window.matchMedia(`(max-width: ${LG_MIN_WIDTH - 1}px)`);
+    const snapGrid2BelowLg = () => {
+      if (mql.matches) setLayout((prev) => (prev === 'grid-3' ? 'grid-2' : prev));
+    };
+    snapGrid2BelowLg();
+    mql.addEventListener('change', snapGrid2BelowLg);
+    return () => mql.removeEventListener('change', snapGrid2BelowLg);
+  }, []);
 
   const categoryOptions = useMemo(() => {
     const s = new Set<string>();
@@ -426,16 +473,20 @@ export default function ProjectsPageShowcase({ projects }: ProjectsPageShowcaseP
         />
       ) : (
         <>
-          <div className="mb-10 grid grid-cols-1 items-end gap-5 md:mb-14 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:gap-4 md:gap-x-6">
-            <CategoryFilterDropdown
-              value={categoryFilter}
-              onChange={setCategoryFilter}
-              categories={categoryOptions}
-            />
-            <p className="justify-self-center text-center font-[family-name:var(--M)] text-[0.62rem] uppercase tracking-[0.2em] text-[var(--fg2)] md:py-1 md:text-[0.65rem]">
+          <div className="relative z-20 mb-10 grid grid-cols-[1fr_auto] items-center gap-x-3 gap-y-4 md:mb-14 md:grid-cols-[minmax(0,auto)_minmax(0,1fr)_minmax(0,auto)] md:items-end md:gap-y-4 md:gap-x-6">
+            <div className="col-start-1 row-start-1 justify-self-start">
+              <CategoryFilterDropdown
+                value={categoryFilter}
+                onChange={setCategoryFilter}
+                categories={categoryOptions}
+              />
+            </div>
+            <p className="col-span-2 hidden justify-self-center text-center font-[family-name:var(--M)] text-[0.62rem] uppercase tracking-[0.2em] text-[var(--fg2)] md:col-span-1 md:col-start-2 md:row-start-1 md:block md:py-1 md:text-[0.65rem]">
               {filtered.length} project{filtered.length === 1 ? '' : 's'}
             </p>
-            <LayoutToggleButtons layout={layout} onChange={setLayout} />
+            <div className="col-start-2 row-start-1 justify-self-end md:col-start-3 md:row-start-1">
+              <LayoutToggleButtons layout={layout} onChange={setLayout} />
+            </div>
           </div>
           <ShowcaseGridView projects={filtered} columns={layout === 'grid-2' ? 2 : 3} />
         </>
