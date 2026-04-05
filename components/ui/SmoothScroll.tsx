@@ -1,13 +1,24 @@
 "use client";
 
-import { useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode,
+} from "react";
 import Lenis from "lenis";
 import { AnimatePresence } from "framer-motion";
 import "lenis/dist/lenis.css";
 import SplashScreen from "./SplashScreen";
 
+/** When false, Hero should stay visually gated and defer reveal observers (splash still on or exiting). */
+export const HeroIntroContext = createContext<boolean | undefined>(undefined);
+
 export default function SmoothScroll({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
+  const [heroIntroReady, setHeroIntroReady] = useState(false);
+  const splashWasShown = useRef(false);
 
   useEffect(() => {
     if (loading) return;
@@ -38,14 +49,27 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
     };
   }, [loading]);
 
+  useEffect(() => {
+    if (loading) splashWasShown.current = true;
+  }, [loading]);
+
+  useEffect(() => {
+    if (!loading && !splashWasShown.current) {
+      setHeroIntroReady(true);
+    }
+  }, [loading]);
+
   return (
-    <>
-      <AnimatePresence mode="wait">
+    <HeroIntroContext.Provider value={heroIntroReady}>
+      <AnimatePresence
+        mode="wait"
+        onExitComplete={() => setHeroIntroReady(true)}
+      >
         {loading && <SplashScreen finishLoading={() => setLoading(false)} />}
       </AnimatePresence>
       <div className={loading ? "overflow-hidden h-screen" : ""}>
         {children}
       </div>
-    </>
+    </HeroIntroContext.Provider>
   );
 }

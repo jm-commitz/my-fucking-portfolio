@@ -283,6 +283,30 @@ body::after {
     radial-gradient(ellipse 50% 40% at 0% 100%, rgba(240, 236, 224, 0.03), transparent 45%);
 }
 
+/* After splash: fade + lift — not on .h-title (headline stays static) */
+.hero-intro-animate.hero-intro-before {
+  opacity: 0;
+  transform: translateY(1.75rem);
+}
+
+.hero-intro-animate.hero-intro-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.85s cubic-bezier(0.19, 1, 0.22, 1),
+    transform 0.85s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .hero-intro-animate.hero-intro-before,
+  .hero-intro-animate.hero-intro-active {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 @media (min-width: 768px) {
   .hero {
     padding-left: 2.5rem;

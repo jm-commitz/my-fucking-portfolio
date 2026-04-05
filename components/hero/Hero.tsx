@@ -1,12 +1,32 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { HeroIntroContext } from '@/components/ui/SmoothScroll';
+import MaskedLinesHeadline from '@/components/ui/MaskedLinesHeadline';
 import HeroAsideVisual from './HeroAsideVisual';
 import HeroTechStack from './HeroTechStack';
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
+  const introReady = useContext(HeroIntroContext) ?? true;
+  const [enterSweep, setEnterSweep] = useState(false);
 
   useEffect(() => {
+    if (!introReady) return;
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setEnterSweep(true));
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+    };
+  }, [introReady]);
+
+  useEffect(() => {
+    if (!introReady || !enterSweep) return;
+
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
@@ -51,44 +71,54 @@ export default function Hero() {
       obs.disconnect();
       countObs.disconnect();
     };
-  }, []);
+  }, [introReady, enterSweep]);
+
+  const introAnim = cn(
+    'hero-intro-animate',
+    (!introReady || !enterSweep) && 'hero-intro-before',
+    introReady && enterSweep && 'hero-intro-active',
+  );
 
   return (
     <section ref={heroRef} className="hero" id="home">
       <div className="h-inner">
         <div className="h-col h-col-main">
           {/* <div className="avail reveal"><span className="avail-dot"></span>Available for Projects</div> */}
-          <h1 className="h-title">
-            <span className="hl1 reveal" data-d="0.05">Launch Faster.</span>
-            <span className="hl2 reveal" data-d="0.1">Build Smarter.</span>
-          </h1>
-          <p className="h-desc reveal" data-d="0.2">
-            <span className="h-desc-line">Full-stack development designed for speed and scalability, <br />
+          <MaskedLinesHeadline
+            as="h1"
+            className="h-title"
+            lines={['Launch Faster.', 'Build Smarter.']}
+            play={introReady && enterSweep}
+          />
+          <div className={cn('h-main-below-title flex min-w-0 flex-col', introAnim)}>
+            <p className="h-desc reveal" data-d="0.2">
+              <span className="h-desc-line">Full-stack development designed for speed and scalability, <br />
 built around real-world use,
 from architecture to launch.</span>
-          </p>
-          <div
-            className="h-btns reveal !gap-2 sm:!gap-3 md:!gap-[0.8rem]"
-            data-d="0.25"
-          >
-            <a
-              href="#projects"
-              className="btn-y hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+            </p>
+            <div
+              className="h-btns reveal !gap-2 sm:!gap-3 md:!gap-[0.8rem]"
+              data-d="0.25"
             >
-              See My Work →
-            </a>
-            <a
-              href="mailto:anchetajaymark69@gmail.com"
-              className="btn-o hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
-            >
-              Get In Touch
-            </a>
+              <a
+                href="#projects"
+                className="btn-y hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+              >
+                See My Work →
+              </a>
+              <a
+                href="mailto:anchetajaymark69@gmail.com"
+                className="btn-o hover-trigger !px-4 !py-2 !text-[0.62rem] !tracking-[0.08em] sm:!px-5 sm:!py-2.5 sm:!text-[0.68rem] md:!px-[2.2rem] md:!py-[0.9rem] md:!text-[0.75rem] md:!tracking-[0.1em]"
+              >
+                Get In Touch
+              </a>
+            </div>
           </div>
         </div>
-        <div className="h-col h-col-aside">
+        <div className={cn('h-col h-col-aside', introAnim)}>
           <HeroAsideVisual />
         </div>
-        <HeroTechStack className="reveal" data-d="0.3" />
+        <HeroTechStack className={cn('reveal', introAnim)} data-d="0.3" />
       </div>
     </section>
   );
