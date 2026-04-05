@@ -273,8 +273,7 @@ body::after {
   padding-right: 1.5rem;
   padding-bottom: 0;
   padding-left: 1.5rem;
-  /* Breathing room before the ticker (main bg shows in the margin band) */
-  margin-bottom: clamp(0.75rem, 2vw, 1.5rem);
+  margin-bottom: 0;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -331,7 +330,9 @@ body::after {
     align-self: end;
     justify-self: stretch;
     margin-top: 0;
+    margin-bottom: clamp(0.55rem, 1.3vw, 1.1rem);
     padding-top: clamp(1.25rem, 2vw, 2rem);
+    padding-bottom: clamp(0.55rem, 1.4vw, 1.2rem);
     z-index: 2;
     position: relative;
   }
@@ -401,40 +402,52 @@ body::after {
   }
 }
 
-/* Tablet + mobile stack: copy auto-height, aside fills rest of hero */
+/* Tablet + mobile stack: one viewport-tall hero; ASCII grows up from bottom (overflow top OK) */
 @media (max-width: 1023px) {
+  /*
+   * Lock hero to one screen: height = 100svh (stable vs mobile browser chrome).
+   * Single grid layer: copy on top (z-index), full-height aside + bottom-anchored ASCII under it,
+   * tech strip on top of ASCII. Extra art clips at hero top (overflow: hidden on .hero).
+   */
   .hero {
     overflow: hidden;
+    min-height: 100vh;
+    min-height: 100svh;
+    height: 100vh;
+    height: 100svh;
+    max-height: 100vh;
+    max-height: 100svh;
+    margin-bottom: 0;
   }
 
   .h-inner {
+    isolation: isolate;
     overflow: visible;
     position: relative;
-    /* Match hero content box so the stage row gets a real height (dvh preferred over vh) */
-    min-height: calc(100vh - clamp(5.5rem, 11vh, 7rem));
-    min-height: calc(100dvh - clamp(5.5rem, 11vh, 7rem));
+    min-height: 0;
+    height: 100%;
+    max-height: 100%;
     grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    grid-template-areas:
-      "main"
-      "stage";
-    gap: clamp(1.1rem, 3vw, 1.75rem);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "layer";
+    gap: 0;
     align-items: stretch;
-    align-content: start;
+    align-content: stretch;
     align-self: stretch;
-    flex: 1 1 auto;
+    flex: 1 1 0%;
   }
 
   .h-col-main {
-    grid-area: main;
+    grid-area: layer;
     justify-content: flex-start;
     align-self: start;
     position: relative;
-    z-index: 1;
+    z-index: 3;
+    pointer-events: auto;
   }
 
   .h-col-aside {
-    grid-area: stage;
+    grid-area: layer;
     container-type: size;
     container-name: hero-aside;
     overflow: visible;
@@ -443,23 +456,24 @@ body::after {
     justify-content: flex-end;
     align-items: flex-end;
     position: relative;
-    z-index: 2;
+    z-index: 1;
     pointer-events: none;
     align-self: stretch;
     min-height: 0;
     height: 100%;
+    max-height: 100%;
     border: none;
     padding: 0;
   }
 
-  /* Same cell as ASCII: pinned to bottom, above art (reference: brand strip over portrait) */
   .h-inner > .h-tech-stack {
-    grid-area: stage;
+    grid-area: layer;
     align-self: end;
     justify-self: stretch;
     margin-top: 0;
+    margin-bottom: clamp(0.35rem, 1.2vw, 0.65rem);
     padding-top: 0;
-    padding-bottom: clamp(0.5rem, 2.2vw, 1.1rem);
+    padding-bottom: clamp(0.45rem, 1.5vw, 0.85rem);
     z-index: 5;
     position: relative;
     pointer-events: auto;
@@ -476,20 +490,21 @@ body::after {
     width: max-content;
     max-width: none;
     min-width: 100%;
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
+    max-height: 100%;
     height: 100%;
     -webkit-overflow-scrolling: auto;
     overscroll-behavior: auto;
   }
 
-  /* Larger ASCII on phones: aside is the container; max(w,h) scale (was only ≥480px before) */
+  /* Bottom-anchored, scale up (max) so art extends upward; hero clips top */
   @container hero-aside (min-width: 0px) {
     .h-aside-ascii {
       flex-shrink: 0;
       font-size: max(
         0.22rem,
-        max(calc(100cqi / 138), calc(100cqb / 98))
+        max(calc(100cqi / 192), calc(100cqb / 138))
       );
       width: max-content;
       max-width: none;

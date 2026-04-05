@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     siteName: 'JM Portfolio',
     images: [
       {
-        url: '/images/metatags/metatags.png',
+        url: '/images/metatags/metatags1.png',
         width: 1200,
         height: 630,
         alt: 'JM Portfolio Preview',
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Full-Stack & Mobile Developer",
     description: "I build SaaS platforms, mobile apps, and web systems.",
-    images: ['/images/metatags/metatags.png'],
+    images: ['/images/metatags/metatags1.png'],
   },
 };
 

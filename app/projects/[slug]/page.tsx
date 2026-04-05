@@ -129,7 +129,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         </section>
 
         {/* CTA Footer */}
-        <footer className="flex flex-col items-stretch justify-between gap-10 pt-16 md:flex-row md:items-center reveal animate-[terminal-slide_1.4s_ease-out_forwards]">
+        <footer className="flex flex-col items-start justify-between gap-8 pt-16 md:flex-row md:items-center md:gap-10 reveal animate-[terminal-slide_1.4s_ease-out_forwards]">
           <div className="min-w-0 flex-1 space-y-3 text-left font-sans">
             <h3 className="text-[1rem] font-semibold uppercase tracking-[0.1em] text-[var(--fg)] md:text-[1.05rem]">
               End of case study
@@ -140,7 +140,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
           <Link
             href="/#contact"
-            className="btn-y px-10 py-5 text-[0.8rem] tracking-[0.3em] font-bold hover:scale-105 transition-transform"
+            className="btn-y !inline-block w-fit shrink-0 !px-5 !py-2.5 !text-[0.62rem] !tracking-[0.18em] hover:!scale-100 md:!px-6 md:!py-3 md:!text-[0.68rem]"
           >
             Initiate Contact
           </Link>
