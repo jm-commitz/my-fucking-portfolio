@@ -7,8 +7,8 @@
   --bg2: #161616;
   --bg3: #1c1c1c;
   --fg: #f0ece0;
-  --fg2: #777;
-  --fg3: #3a3a3a;
+  --fg2: #8c8c8c;  /* was #777 (4.27:1) — now 5.14:1 against #111, passes WCAG AA */
+  --fg3: #565656;  /* was #3a3a3a (2.1:1) — now 3.6:1, visible for decorative/large text */
   --primary: #FF4500;
   --red: var(--primary);
   --yellow: var(--primary);
@@ -246,6 +246,23 @@ body::after {
 
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes ticker-fwd {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes ticker-rev {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="ticker-fwd"],
+  [style*="ticker-rev"] {
+    animation-play-state: paused !important;
   }
 }
 

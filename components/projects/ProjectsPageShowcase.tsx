@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import {
@@ -205,7 +206,7 @@ function CarouselThumbnailStrip({
               selected === i ? 'opacity-100' : 'opacity-60 group-hover:opacity-100'
             }`}
           >
-            <img src={p.img} alt="" className="h-full w-full object-cover object-center" />
+            <Image src={p.img} alt={p.name} fill className="object-cover object-center" sizes="48px" />
           </div>
           <div className="flex h-2 w-full items-center justify-center" aria-hidden>
             {selected === i && (
@@ -256,10 +257,13 @@ function ShowcaseGridView({
             className="group block cursor-view-project focus:outline-none focus-visible:[&_img]:brightness-110"
           >
             <div className="relative aspect-video w-full overflow-hidden bg-[var(--fg2)]/10">
-              <img
+              <Image
                 src={project.img}
                 alt={project.name}
-                className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
+                fill
+                className="object-cover object-center transition-transform duration-500 group-hover:scale-[1.02]"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                loading="lazy"
               />
               <div className="pointer-events-none absolute inset-0 bg-black/[0.06]" />
             </div>
@@ -392,10 +396,14 @@ function ShowcaseCarouselView({
                       className="relative block cursor-view-project focus:outline-none focus-visible:[&_img]:brightness-110"
                     >
                       <div className="relative block aspect-video w-full overflow-hidden bg-[var(--fg2)]/10 md:aspect-auto md:min-h-[min(68vh,720px)]">
-                        <img
+                        <Image
                           src={project.img}
                           alt={project.name}
-                          className="absolute inset-0 h-full w-full object-cover object-center"
+                          fill
+                          className="object-cover object-center"
+                          sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 86vw"
+                          priority={false}
+                          loading="lazy"
                         />
                         <div className="pointer-events-none absolute inset-0 bg-black/[0.06]" />
                       </div>

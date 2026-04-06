@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 type TickerItem = string | { src: string; alt: string };
 
@@ -13,7 +13,7 @@ type TickerProps = {
 };
 
 export default function Ticker({ items, theme, speed = 'normal', emIcon = '★' }: TickerProps) {
-  // Use two sets of items for seamless loop
+  // Duplicate items for seamless loop
   const allItems = [...items, ...items];
 
   let containerBg = '';
@@ -38,24 +38,20 @@ export default function Ticker({ items, theme, speed = 'normal', emIcon = '★' 
     emColor = 'text-[#f0ece0]/20';
   }
 
-  let duration = 30;
-  if (speed === 'rev') duration = 20;
-  if (speed === 'slow') duration = 60;
+  // Duration tuning
+  let duration = '30s';
+  if (speed === 'rev') duration = '20s';
+  if (speed === 'slow') duration = '60s';
 
-  // For reverse, we go from -50% to 0
-  const initialX = speed === 'rev' ? "-50%" : "0%";
-  const animateX = speed === 'rev' ? "0%" : "-50%";
+  const animName = speed === 'rev' ? 'ticker-rev' : 'ticker-fwd';
 
   return (
     <div className={`overflow-hidden py-4 relative z-10 ${containerBg} ${containerBorder}`}>
-      <motion.div 
+      <div
         className="flex items-center whitespace-nowrap"
-        initial={{ x: initialX }}
-        animate={{ x: animateX }}
-        transition={{ 
-          duration,
-          repeat: Infinity,
-          ease: "linear"
+        style={{
+          animation: `${animName} ${duration} linear infinite`,
+          willChange: 'transform',
         }}
       >
         {allItems.map((item, i) => (
@@ -64,13 +60,20 @@ export default function Ticker({ items, theme, speed = 'normal', emIcon = '★' 
                {typeof item === 'string' ? (
                  <span>{item}</span>
                ) : (
-                 <img src={item.src} alt={item.alt} className="h-8 w-auto opacity-100 transition-opacity" />
+                 <Image
+                   src={item.src}
+                   alt={item.alt}
+                   width={64}
+                   height={32}
+                   className="h-8 w-auto opacity-100"
+                   loading="lazy"
+                 />
                )}
              </span>
-             <em className={`not-italic ${emColor} text-lg`}>{emIcon}</em>
+             <em className={`not-italic ${emColor} text-lg`} aria-hidden="true">{emIcon}</em>
           </div>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

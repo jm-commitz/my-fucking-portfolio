@@ -1,4 +1,5 @@
 import type { HTMLAttributes } from 'react';
+import Image from 'next/image';
 
 const TECH = [
   { src: '/images/techstack/laravel.svg', name: 'Laravel' },
@@ -20,16 +21,15 @@ export default function HeroTechStack({
       </p>
       <div className="h-tech-stack-logos" aria-label="Technologies">
         {TECH.map(({ src, name }) => (
-          <img
+          <Image
             key={src}
             src={src}
-            alt=""
-            className="h-tech-stack-logo hover-trigger"
+            alt={name}
             width={180}
             height={56}
+            className="h-tech-stack-logo hover-trigger"
             loading="lazy"
             decoding="async"
-            title={name}
           />
         ))}
       </div>

@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { projects, getProjectBySlug } from '@/components/featuredProjects/projectsData';
 
 type ProjectPageProps = {
@@ -28,10 +29,14 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
       {/* Full-viewport hero image (Good Fella–style case study lead) */}
       <section className="relative h-[100dvh] min-h-[20rem] w-full overflow-hidden">
-        <img
+        <Image
           src={project.img}
           alt={project.name}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          priority
+          quality={90}
         />
         <div
           className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-[var(--bg)]"

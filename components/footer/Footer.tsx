@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 
 /** Digits only, country code, no + (WhatsApp API format). */
 const WHATSAPP_PHONE = '639917944729';
@@ -64,12 +65,13 @@ export default function Footer() {
                   : { rel: 'nofollow' })}
                 className="group flex items-center gap-2.5 font-[family-name:var(--M)] text-[0.72rem] uppercase tracking-[0.15em] text-[var(--fg)] no-underline transition-colors duration-200 hover:text-[var(--primary)] md:text-[0.75rem]"
               >
-                <img
+                <Image
                   src={c.iconSrc}
                   alt=""
                   width={20}
                   height={20}
                   className="h-[18px] w-[18px] shrink-0 object-contain md:h-5 md:w-5"
+                  loading="lazy"
                 />
                 <span>{c.name}</span>
                 <span className="text-[1rem] opacity-0 transition-opacity duration-200 group-hover:opacity-100">↗</span>
@@ -91,12 +93,13 @@ export default function Footer() {
                 : { rel: 'nofollow' })}
               className="flex items-center gap-1.5 border border-[#f0ece0]/[0.12] px-2.5 py-1 text-[0.6rem] uppercase tracking-[0.1em] text-[var(--fg2)] no-underline transition-all duration-200 hover:border-[var(--primary)] hover:text-[var(--primary)]"
             >
-              <img
+              <Image
                 src={c.iconSrc}
                 alt=""
                 width={14}
                 height={14}
                 className="h-3.5 w-3.5 shrink-0 object-contain opacity-90"
+                loading="lazy"
               />
               {c.shortId}
             </a>

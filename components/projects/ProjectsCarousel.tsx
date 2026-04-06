@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export type CarouselProject = {
   slug: string;
@@ -63,10 +64,13 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                   i === selected ? 'opacity-100' : 'opacity-35 hover:opacity-70'
                 }`}
               >
-                <img
+                <Image
                   src={project.img}
-                  alt=""
+                  alt={project.name}
+                  width={80}
+                  height={60}
                   className="aspect-[4/3] h-12 w-16 object-cover sm:h-14 sm:w-[4.5rem]"
+                  loading="lazy"
                 />
               </span>
               <span
@@ -94,10 +98,13 @@ export default function ProjectsCarousel({ projects }: ProjectsCarouselProps) {
                   className="group block cursor-view-project focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg)]"
                 >
                   <div className="relative block aspect-video w-full overflow-hidden bg-[var(--fg2)]/10 md:aspect-auto md:min-h-[min(68vh,720px)]">
-                    <img
+                    <Image
                       src={project.img}
                       alt={project.name}
-                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 92vw, (max-width: 1280px) 88vw, 86vw"
+                      loading="lazy"
                     />
                     <div className="pointer-events-none absolute inset-0 bg-black/[0.06]" />
                   </div>

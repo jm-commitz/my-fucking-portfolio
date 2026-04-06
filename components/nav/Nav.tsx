@@ -52,12 +52,15 @@ export default function Nav() {
         <div className="flex items-center md:justify-center">
           <button
             onClick={toggleMenu}
+            aria-label={isOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isOpen}
+            aria-controls="nav-menu"
             className="group flex flex-col items-center md:gap-1.5 hover-trigger focus:outline-none"
           >
             <div className="flex flex-col gap-[5px] items-center">
-              <span className={`w-8 h-[2px] bg-[var(--fg)] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[7px] bg-[var(--red)]' : ''}`} />
-              <span className={`w-5 h-[2px] bg-[var(--fg2)] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-              <span className={`w-8 h-[2px] bg-[var(--fg)] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[7px] bg-[var(--red)]' : ''}`} />
+              <span className={`w-8 h-[2px] bg-[var(--fg)] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[7px] bg-[var(--red)]' : ''}`} aria-hidden="true" />
+              <span className={`w-5 h-[2px] bg-[var(--fg2)] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} aria-hidden="true" />
+              <span className={`w-8 h-[2px] bg-[var(--fg)] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[7px] bg-[var(--red)]' : ''}`} aria-hidden="true" />
             </div>
           </button>
         </div>
@@ -70,7 +73,13 @@ export default function Nav() {
       </nav>
 
       {/* Expandable Menu Overlay */}
-      <div className={`fixed inset-0 z-[850] bg-[var(--bg)] transition-all duration-700 ease-in-out ${isOpen ? 'opacity-100 pointer-events-auto backdrop-blur-2xl' : 'opacity-0 pointer-events-none translate-y-12 blur-2xl'}`}>
+      <div
+        id="nav-menu"
+        role="dialog"
+        aria-label="Navigation menu"
+        aria-modal={isOpen}
+        className={`fixed inset-0 z-[850] bg-[var(--bg)] transition-all duration-700 ease-in-out ${isOpen ? 'opacity-100 pointer-events-auto backdrop-blur-2xl' : 'opacity-0 pointer-events-none translate-y-12 blur-2xl'}`}
+      >
         <div className="h-scan opacity-[0.2]" />
         <div className="absolute inset-0 flex flex-col items-center justify-center p-10 md:p-20 overflow-hidden">
 
