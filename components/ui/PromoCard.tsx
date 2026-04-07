@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { DialogTitle } from '@/components/ui/dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import SplashScreen from '@/components/ui/SplashScreen';
 
 type PromoCardProps = {
   triggerSelector: string;
@@ -31,6 +32,7 @@ export default function PromoCard({
   const [dismissed, setDismissed] = useState(true);
   const [videoOk, setVideoOk] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [splashOpen, setSplashOpen] = useState(false);
 
   const key = useMemo(() => storageKey, [storageKey]);
 
@@ -197,7 +199,7 @@ export default function PromoCard({
                 type="button"
                 onClick={() => {
                   setOpen(false);
-                  setModalOpen(true);
+                  setSplashOpen(true);
                 }}
                 className="inline-flex items-center gap-2 bg-black/90 text-white border border-black/40 px-2.5 py-1.5 sm:px-3 sm:py-2 text-[0.68rem] sm:text-[0.7rem] uppercase tracking-[0.12em] hover:bg-black"
               >
@@ -239,6 +241,15 @@ export default function PromoCard({
             </div>
           </DialogContent>
         </Dialog>
+      )}
+
+      {modalSrc && splashOpen && (
+        <SplashScreen
+          finishLoading={() => {
+            setSplashOpen(false);
+            setModalOpen(true);
+          }}
+        />
       )}
     </>
   );
