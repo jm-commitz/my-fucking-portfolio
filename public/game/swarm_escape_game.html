@@ -12,6 +12,31 @@ body{display:flex;align-items:center;justify-content:center;}
   background:rgba(0,0,0,0.26);backdrop-filter:blur(2px);
   border-radius:4px;
 }
+#donatedlg{
+  position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.28);
+  border-radius:4px;
+}
+#donatedlg .card{
+  width:min(290px, calc(100% - 24px));
+  padding:12px;
+  border-radius:12px;
+  border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));
+  background:rgba(0,0,0,0.28);
+  color:var(--color-text-primary, rgba(255,255,255,0.95));
+}
+#donatedlg .row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+#donatedlg .msg{font-size:12px;line-height:1.35;letter-spacing:0.02em;}
+#donatedlg .close{
+  flex:0 0 auto;
+  width:30px;height:30px;
+  border-radius:10px;
+  border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));
+  background:rgba(0,0,0,0.45);
+  color:rgba(255,255,255,0.92);
+  cursor:pointer;
+}
+#donatedlg img{display:block;width:100%;height:auto;border-radius:10px;margin-top:10px;}
 #playdlg .card{
   min-width:240px;max-width:280px;
   padding:14px 14px 12px 14px;border-radius:10px;
@@ -87,6 +112,15 @@ body{display:flex;align-items:center;justify-content:center;}
         <div style="margin-top:8px;opacity:0.85">Move: arrows / d-pad · Dash: <kbd>Shift</kbd> or <kbd>Space</kbd> + Up/Down</div>
       </div>
     </div>
+    <div id="donatedlg" role="dialog" aria-modal="false" aria-label="Donate">
+      <div class="card">
+        <div class="row">
+          <div class="msg">are you enjoy the game? donate me</div>
+          <button id="donateclose" type="button" class="close" aria-label="Close">×</button>
+        </div>
+        <img src="/game/payme.png" alt="Donate" />
+      </div>
+    </div>
   </div>
   <div id="smsg">use arrow keys or d-pad to start · esc to close</div>
   <div id="joyWrap" aria-label="Joystick">
@@ -128,6 +162,8 @@ let started=false;
 let joyX=0, joyY=0;
 let joyActive=false;
 let joyPid=null;
+let donateTimer=null;
+let donateShown=false;
 
 let dashCharges=0;
 let speedUntil=0;
@@ -147,6 +183,8 @@ const playDlgBody=document.getElementById('playdlgBody');
 const playBtn=document.getElementById('playbtn');
 const joyWrap=document.getElementById('joyWrap');
 const joyKnob=document.getElementById('joyKnob');
+const donateDlg=document.getElementById('donatedlg');
+const donateClose=document.getElementById('donateclose');
 
 function dark(){return window.matchMedia('(prefers-color-scheme:dark)').matches;}
 function BG(){return dark()?'#111110':'#f8f8f6';}
@@ -273,6 +311,15 @@ function startAtLevel(lvl){
   hud();
   document.getElementById('smsg').textContent='';
   running=true;
+
+  // Donate popup after 3 minutes (once per session).
+  if(!donateShown && !donateTimer){
+    donateTimer = setTimeout(() => {
+      donateShown = true;
+      donateTimer = null;
+      if(donateDlg) donateDlg.style.display='flex';
+    }, 180000);
+  }
 }
 
 function buildLevel(lvl){
@@ -345,6 +392,9 @@ function init(){
   exitWarnUntil=0;
   dead=false;
   running=false;
+  donateShown=false;
+  if(donateTimer){ clearTimeout(donateTimer); donateTimer=null; }
+  if(donateDlg) donateDlg.style.display='none';
   px=W/2-PLAYER/2;py=H/2-PLAYER/2;vx=0;vy=0;
   enemies=[];
   traps=[];
@@ -545,10 +595,13 @@ function die(reason){
 
   if(hadSpareLife){
     const msg = reason==='bomb' ? 'bomb consumed!' : 'you died!';
-    document.getElementById('smsg').textContent=msg+' press any arrow / d-pad to respawn';
+    document.getElementById('smsg').textContent=msg+' press Play to respawn';
+    showPlayDialog('You died','Press Enter to respawn — or tap Play.');
+    if(playBtn) playBtn.textContent='Respawn';
   }else{
-    document.getElementById('smsg').textContent='game over · press any arrow / d-pad to restart';
-    showPlayDialog('Game Over','Press Enter to play again.');
+    document.getElementById('smsg').textContent='game over · press Play to restart';
+    showPlayDialog('Game Over','Press Enter to play again — or tap Play.');
+    if(playBtn) playBtn.textContent='Play again';
   }
 }
 
@@ -671,6 +724,7 @@ function draw(){
 function showPlayDialog(title, body){
   playDlgTitle.textContent=title;
   playDlgBody.textContent=body;
+  if(playBtn) playBtn.textContent='Play';
   playDlg.style.display='flex';
 }
 function hidePlayDialog(){
@@ -791,6 +845,16 @@ playDlg?.addEventListener('pointerdown',(ev)=>{
 playBtn?.addEventListener('click',(ev)=>{
   ev.preventDefault();
   playEnter();
+});
+
+donateClose?.addEventListener('click',(ev)=>{
+  ev.preventDefault();
+  if(donateDlg) donateDlg.style.display='none';
+});
+donateDlg?.addEventListener('click',(ev)=>{
+  if(ev.target === donateDlg){
+    if(donateDlg) donateDlg.style.display='none';
+  }
 });
 
 init();draw();
