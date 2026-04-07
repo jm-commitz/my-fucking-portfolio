@@ -54,6 +54,38 @@ html {
   }
 }
 
+/* While the game modal is open, disable the custom cursor overlay */
+html[data-game-modal-open="1"] .cur,
+html[data-game-modal-open="1"] .cur-ring,
+html[data-game-modal-open="1"] .cursor-view-project-label {
+  display: none !important;
+}
+@media (pointer: fine) {
+  html[data-game-modal-open="1"] body,
+  html[data-game-modal-open="1"] a,
+  html[data-game-modal-open="1"] button {
+    cursor: auto !important;
+  }
+}
+
+/* While the game modal is open, hard-lock scrolling (Lenis + native). */
+html[data-game-modal-open="1"],
+html[data-game-modal-open="1"] body {
+  overflow: hidden !important;
+  height: 100% !important;
+  overscroll-behavior: none !important;
+}
+html[data-game-modal-open="1"].lenis,
+html[data-game-modal-open="1"] .lenis {
+  overflow: hidden !important;
+}
+
+/* Hide nav while playing the game (clean "game mode"). */
+html[data-game-modal-open="1"] nav,
+html[data-game-modal-open="1"] #nav-menu {
+  display: none !important;
+}
+
 .cursor-view-project-label {
   font-family: var(--M);
   font-size: 0.65rem;

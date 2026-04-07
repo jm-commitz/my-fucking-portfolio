@@ -117,12 +117,12 @@ export default function Cursor() {
           <div
             ref={dotRef}
             className={`cur ${isHovered ? 'on' : ''}`}
-            style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 9999 }}
+            style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 100000 }}
           />
           <div
             ref={ringRef}
             className={`cur-ring ${isHovered ? 'on' : ''}`}
-            style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 9998 }}
+            style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 99999 }}
           />
         </>
       )}
@@ -130,7 +130,7 @@ export default function Cursor() {
         <div
           ref={labelRef}
           className="cursor-view-project-label"
-          style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 10000 }}
+          style={{ position: 'fixed', left: 0, top: 0, pointerEvents: 'none', zIndex: 100001 }}
         >
           VIEW PROJECT
         </div>

@@ -1,0 +1,159 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{display:flex;align-items:center;justify-content:center;}
+#sw{display:flex;flex-direction:column;align-items:center;padding:0;gap:1rem;font-family:var(--font-mono,monospace);}
+#shud{display:flex;gap:2rem;font-size:13px;color:var(--color-text-secondary, rgba(255,255,255,0.75));}
+#shud span{color:var(--color-text-primary, rgba(255,255,255,0.95));font-weight:500;}
+#sc2{display:block;border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));border-radius:4px;}
+#smsg{font-size:13px;color:var(--color-text-secondary, rgba(255,255,255,0.75));letter-spacing:0.04em;text-align:center;}
+#dpad2{display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px);gap:4px;}
+.dp{width:40px;height:40px;border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));border-radius:4px;background:var(--color-background-secondary, rgba(255,255,255,0.06));cursor:pointer;font-size:14px;color:var(--color-text-primary, rgba(255,255,255,0.95));display:flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;}
+.dp:active{background:var(--color-background-primary);}
+.dp.empty{border:none;background:transparent;pointer-events:none;}
+</style>
+<div id="sw">
+  <div id="shud">ALIVE <span id="sec">0s</span> &nbsp;&nbsp; BEST <span id="bst">0s</span></div>
+  <canvas id="sc2" width="320" height="320"></canvas>
+  <div id="smsg">use arrow keys or d-pad to start · esc to close</div>
+  <div id="dpad2">
+    <div class="dp empty"></div><div class="dp" id="u2">▲</div><div class="dp empty"></div>
+    <div class="dp" id="l2">◀</div><div class="dp" id="d2">▼</div><div class="dp" id="r2">▶</div>
+  </div>
+</div>
+<script>
+const C=document.getElementById('sc2'),ctx=C.getContext('2d');
+const W=320,H=320,TILE=16,PS=14,BS=7,BCOUNT=12,SPEED=1.5,BSPEED=1.1;
+let px,py,vx,vy,boids,startT,bestT=0,running=false,dead=false,secs=0,frame,keys={};
+
+function dark(){return window.matchMedia('(prefers-color-scheme:dark)').matches;}
+function BG(){return dark()?'#111110':'#f8f8f6';}
+function GRID(){return dark()?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.04)';}
+
+function mkBoid(){
+  const edge=Math.floor(Math.random()*4);
+  let x,y;
+  if(edge===0){x=Math.random()*W;y=0;}
+  else if(edge===1){x=W;y=Math.random()*H;}
+  else if(edge===2){x=Math.random()*W;y=H;}
+  else{x=0;y=Math.random()*H;}
+  return{x,y,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2};
+}
+
+function init(){
+  px=W/2;py=H/2;vx=0;vy=0;
+  boids=Array.from({length:BCOUNT},mkBoid);
+  dead=false;secs=0;
+  document.getElementById('sec').textContent='0s';
+}
+
+function moveBoid(b){
+  const dx=px-b.x,dy=py-b.y,dist=Math.sqrt(dx*dx+dy*dy)||1;
+  b.vx+=dx/dist*0.06;
+  b.vy+=dy/dist*0.06;
+  boids.forEach(o=>{
+    if(o===b)return;
+    const dx2=b.x-o.x,dy2=b.y-o.y,d=Math.sqrt(dx2*dx2+dy2*dy2)||1;
+    if(d<20){b.vx+=dx2/d*0.08;b.vy+=dy2/d*0.08;}
+  });
+  const sp=Math.sqrt(b.vx*b.vx+b.vy*b.vy)||1;
+  if(sp>BSPEED){b.vx=b.vx/sp*BSPEED;b.vy=b.vy/sp*BSPEED;}
+  b.x+=b.vx;b.y+=b.vy;
+  b.x=Math.max(0,Math.min(W,b.x));b.y=Math.max(0,Math.min(H,b.y));
+}
+
+function step(){
+  if(!running)return;
+  if(keys.ArrowLeft||keys.a)vx-=0.4;
+  if(keys.ArrowRight||keys.d)vx+=0.4;
+  if(keys.ArrowUp||keys.w)vy-=0.4;
+  if(keys.ArrowDown||keys.s)vy+=0.4;
+  const spd=Math.sqrt(vx*vx+vy*vy)||1;
+  if(spd>SPEED){vx=vx/spd*SPEED;vy=vy/spd*SPEED;}
+  vx*=0.88;vy*=0.88;
+  px+=vx;py+=vy;
+  px=Math.max(0,Math.min(W-PS,px));py=Math.max(0,Math.min(H-PS,py));
+  boids.forEach(moveBoid);
+  for(const b of boids){
+    if(b.x+BS>px&&b.x<px+PS&&b.y+BS>py&&b.y<py+PS){die();return;}
+  }
+  secs=Math.floor((Date.now()-startT)/1000);
+  document.getElementById('sec').textContent=secs+'s';
+  if(secs>bestT){bestT=secs;document.getElementById('bst').textContent=secs+'s';}
+  draw();
+}
+
+function die(){
+  running=false;dead=true;draw();
+  document.getElementById('smsg').textContent='caught! arrow key or d-pad to retry';
+}
+
+function draw(){
+  ctx.fillStyle=BG();ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=GRID();
+  for(let y=0;y<=H;y+=TILE)ctx.fillRect(0,y,W,1);
+  for(let x=0;x<=W;x+=TILE)ctx.fillRect(x,0,1,H);
+  if(!dead){
+    boids.forEach(b=>{
+      const dx=px+PS/2-b.x,dy=py+PS/2-b.y,dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<60){
+        ctx.fillStyle=`rgba(216,90,48,${0.06*(1-dist/60)})`;
+        ctx.fillRect(b.x-30,b.y-30,60,60);
+      }
+    });
+  }
+  boids.forEach(b=>{
+    ctx.fillStyle=dead?'#5F5E5A':'#D85A30';
+    ctx.fillRect(b.x-BS/2,b.y-BS/2,BS,BS);
+  });
+  ctx.fillStyle=dead?'#888780':'#185FA5';
+  ctx.fillRect(px,py,PS,PS);
+  if(!dead){
+    ctx.fillStyle='rgba(24,95,165,0.18)';
+    ctx.fillRect(px-3,py-3,PS+6,PS+6);
+  }
+  ctx.fillStyle=dead?'#888':'#D85A30';
+  ctx.font='11px monospace';
+  ctx.fillText('boids: '+BCOUNT,8,16);
+}
+
+function startGame(dirKey){
+  if(dead){init();}
+  if(!running){
+    running=true;startT=Date.now();
+    document.getElementById('smsg').textContent='';
+  }
+  if(dirKey)keys[dirKey]=true;
+}
+
+document.addEventListener('keydown',e=>{
+  keys[e.key]=true;
+  if(e.key==='Escape'){
+    try{window.parent?.postMessage({type:'swarm-escape:close'}, window.location.origin);}catch{}
+    return;
+  }
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)){
+    e.preventDefault();startGame(e.key);
+  }
+});
+document.addEventListener('keyup',e=>{keys[e.key]=false;});
+
+function dpad(dir,keydown){
+  if(keydown){keys[dir]=true;startGame(dir);}
+  else keys[dir]=false;
+}
+
+['u2','d2','l2','r2'].forEach((id,i)=>{
+  const dirs=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'];
+  const el=document.getElementById(id);
+  el.addEventListener('mousedown',()=>dpad(dirs[i],true));
+  el.addEventListener('mouseup',()=>dpad(dirs[i],false));
+  el.addEventListener('touchstart',e=>{e.preventDefault();dpad(dirs[i],true);},{passive:false});
+  el.addEventListener('touchend',e=>{e.preventDefault();dpad(dirs[i],false);},{passive:false});
+});
+
+init();draw();
+function gameLoop(){frame=requestAnimationFrame(gameLoop);step();}
+gameLoop();
+</script>
+
