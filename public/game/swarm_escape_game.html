@@ -27,6 +27,22 @@ body{display:flex;align-items:center;justify-content:center;}
   border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));
   background:rgba(255,255,255,0.06);
 }
+#playbtn{
+  margin-top:10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:8px;
+  padding:10px 12px;
+  width:100%;
+  border-radius:10px;
+  border:0.5px solid rgba(0,0,0,0.35);
+  background:rgba(0,0,0,0.92);
+  color:white;
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+#playbtn:active{transform:translateY(1px);}
 #smsg{font-size:13px;color:var(--color-text-secondary, rgba(255,255,255,0.75));letter-spacing:0.04em;text-align:center;}
 #dpad2{display:grid;grid-template-columns:repeat(3,40px);grid-template-rows:repeat(2,40px);gap:4px;}
 .dp{width:40px;height:40px;border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));border-radius:4px;background:var(--color-background-secondary, rgba(255,255,255,0.06));cursor:pointer;font-size:14px;color:var(--color-text-primary, rgba(255,255,255,0.95));display:flex;align-items:center;justify-content:center;user-select:none;-webkit-tap-highlight-color:transparent;}
@@ -66,7 +82,8 @@ body{display:flex;align-items:center;justify-content:center;}
     <div id="playdlg" role="dialog" aria-modal="true">
       <div class="card">
         <div class="title" id="playdlgTitle">Swarm Escape</div>
-        <div id="playdlgBody">Press <kbd>Enter</kbd> to play.</div>
+        <div id="playdlgBody">Press <kbd>Enter</kbd> to play — or tap Play.</div>
+        <button id="playbtn" type="button">Play</button>
         <div style="margin-top:8px;opacity:0.85">Move: arrows / d-pad · Dash: <kbd>Shift</kbd> or <kbd>Space</kbd> + Up/Down</div>
       </div>
     </div>
@@ -127,6 +144,7 @@ let exitWarnUntil=0;
 const playDlg=document.getElementById('playdlg');
 const playDlgTitle=document.getElementById('playdlgTitle');
 const playDlgBody=document.getElementById('playdlgBody');
+const playBtn=document.getElementById('playbtn');
 const joyWrap=document.getElementById('joyWrap');
 const joyKnob=document.getElementById('joyKnob');
 
@@ -765,6 +783,12 @@ if(joyWrap){
 // Tap-to-play for touch devices (no Enter key)
 playDlg?.addEventListener('pointerdown',(ev)=>{
   if(ev.pointerType==='mouse') return;
+  ev.preventDefault();
+  playEnter();
+});
+
+// On-screen Play button (works on mobile too)
+playBtn?.addEventListener('click',(ev)=>{
   ev.preventDefault();
   playEnter();
 });
