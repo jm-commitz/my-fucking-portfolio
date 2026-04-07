@@ -82,7 +82,7 @@ export default function HeroAsideVisual() {
       </pre>
 
       {/* Scanline/Noise Grain Overlay */}
-      <div className="absolute inset-0 z-20 pointer-events-none opacity-10 bg-[#111111]" aria-hidden="true" />
+      <div className="absolute inset-0 z-20 pointer-events-none opacity-10 bg-transparent" aria-hidden="true" />
     </div>
   );
 }
