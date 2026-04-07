@@ -24,7 +24,7 @@ const chatLinks = [
   {
     name: 'Viber',
     shortId: 'VB',
-    url: `viber://forward?text=${encodedPrefill}&number=${VIBER_PHONE}`,
+    url: `viber://chat?number=%2B${VIBER_PHONE}&text=${encodedPrefill}`,
     openInNewTab: false,
     iconSrc: '/images/social/viber.svg',
   },
