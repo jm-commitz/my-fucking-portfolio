@@ -11,22 +11,24 @@ body{display:flex;align-items:center;justify-content:center;}
   position:absolute;inset:0;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,0,0.26);backdrop-filter:blur(2px);
   border-radius:4px;
+  z-index:30;
 }
 #donatedlg{
   position:absolute;inset:0;display:none;align-items:center;justify-content:center;
   background:rgba(0,0,0,0.28);
   border-radius:4px;
+  z-index:40;
 }
 #donatedlg .card{
   width:min(290px, calc(100% - 24px));
   padding:12px;
   border-radius:12px;
   border:0.5px solid var(--color-border-secondary, rgba(255,255,255,0.22));
-  background:rgba(0,0,0,0.28);
+  background:var(--primary, #FF4500);
   color:var(--color-text-primary, rgba(255,255,255,0.95));
 }
 #donatedlg .row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-#donatedlg .msg{font-size:12px;line-height:1.35;letter-spacing:0.02em;}
+#donatedlg .msg{font-size:18px;line-height:1.25;letter-spacing:0.02em;font-weight:700;}
 #donatedlg .close{
   flex:0 0 auto;
   width:30px;height:30px;
@@ -115,7 +117,7 @@ body{display:flex;align-items:center;justify-content:center;}
     <div id="donatedlg" role="dialog" aria-modal="false" aria-label="Donate">
       <div class="card">
         <div class="row">
-          <div class="msg">are you enjoy the game? donate me</div>
+          <div class="msg">Are you annoyed by the game? Donate me.</div>
           <button id="donateclose" type="button" class="close" aria-label="Close">×</button>
         </div>
         <img src="/game/payme.png" alt="Donate" />
@@ -162,8 +164,10 @@ let started=false;
 let joyX=0, joyY=0;
 let joyActive=false;
 let joyPid=null;
-let donateTimer=null;
 let donateShown=false;
+let donateStartAt=0;       // timestamp when user first pressed Play (within this modal session)
+let donateInterval=null;   // interval id for donate check
+let donateDismissed=false; // user closed it
 
 let dashCharges=0;
 let speedUntil=0;
@@ -312,13 +316,17 @@ function startAtLevel(lvl){
   document.getElementById('smsg').textContent='';
   running=true;
 
-  // Donate popup after 3 minutes (once per session).
-  if(!donateShown && !donateTimer){
-    donateTimer = setTimeout(() => {
-      donateShown = true;
-      donateTimer = null;
-      if(donateDlg) donateDlg.style.display='flex';
-    }, 180000);
+  // Donate popup after 3 minutes total (across deaths/restarts) while this modal is open.
+  if(!donateStartAt) donateStartAt=Date.now();
+  if(!donateInterval){
+    donateInterval = setInterval(() => {
+      if(donateShown || donateDismissed) return;
+      if(!donateStartAt) return;
+      if(Date.now() - donateStartAt >= 180000){
+        donateShown=true;
+        if(donateDlg) donateDlg.style.display='flex';
+      }
+    }, 500);
   }
 }
 
@@ -392,9 +400,8 @@ function init(){
   exitWarnUntil=0;
   dead=false;
   running=false;
-  donateShown=false;
-  if(donateTimer){ clearTimeout(donateTimer); donateTimer=null; }
-  if(donateDlg) donateDlg.style.display='none';
+  // Keep donate timer across restarts (so dying/restarting doesn't reset the 3-minute prompt).
+  // Do not force-hide donate modal here; it may be due.
   px=W/2-PLAYER/2;py=H/2-PLAYER/2;vx=0;vy=0;
   enemies=[];
   traps=[];
@@ -849,16 +856,21 @@ playBtn?.addEventListener('click',(ev)=>{
 
 donateClose?.addEventListener('click',(ev)=>{
   ev.preventDefault();
+  donateDismissed=true;
   if(donateDlg) donateDlg.style.display='none';
 });
 donateDlg?.addEventListener('click',(ev)=>{
   if(ev.target === donateDlg){
+    donateDismissed=true;
     if(donateDlg) donateDlg.style.display='none';
   }
 });
 
 init();draw();
-function gameLoop(){frame=requestAnimationFrame(gameLoop);step();}
+function gameLoop(){
+  frame=requestAnimationFrame(gameLoop);
+  step();
+}
 gameLoop();
 </script>
 
