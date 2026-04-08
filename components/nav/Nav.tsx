@@ -66,8 +66,12 @@ export default function Nav() {
         </div>
 
         <div className="hidden md:flex items-center justify-end">
-          <a href="mailto:anchetajaymark69@gmail.com" className="btn-y hover-trigger text-[0.7rem] font-bold uppercase tracking-[0.1em] py-[0.65rem] px-6 whitespace-nowrap">
-            Hire Me ↗
+          <a
+            href="/cv/JAYMARK ANCHETA - CV.pdf"
+            download="JAYMARK ANCHETA - CV.pdf"
+            className="btn-y hover-trigger text-[0.7rem] font-bold uppercase tracking-[0.1em] py-[0.65rem] px-6 whitespace-nowrap"
+          >
+            Download CV ↓
           </a>
         </div>
       </nav>
@@ -106,10 +110,14 @@ export default function Nav() {
           {/* Social / Contact Info at bottom of menu */}
           <div className="absolute bottom-12 md:bottom-20 flex flex-col items-center gap-6 reveal in">
             <div className="h-[1px] w-20 bg-[var(--fg3)]" />
-            <div className="flex gap-10 items-center justify-center font-[family-name:var(--M)] text-[0.65rem] tracking-[0.4em] uppercase text-[var(--fg3)]">
-              <a href="#" className="hover:text-[var(--fg)] transition-colors">LinkedIn</a>
-              <a href="#" className="hover:text-[var(--fg)] transition-colors">Github</a>
-              <a href="#" className="hover:text-[var(--fg)] transition-colors">Behance</a>
+            <div className="flex items-center justify-center font-[family-name:var(--M)] text-[0.65rem] tracking-[0.4em] uppercase text-[var(--fg3)]">
+              <a
+                href="/cv/JAYMARK ANCHETA - CV.pdf"
+                download="JAYMARK ANCHETA - CV.pdf"
+                className="hover:text-[var(--fg)] transition-colors"
+              >
+                Download CV
+              </a>
             </div>
           </div>
         </div>

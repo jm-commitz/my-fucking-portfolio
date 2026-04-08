@@ -59,8 +59,13 @@ export default function About() {
 
             {/* Simple CTA Row */}
             <div className="mt-10 md:mt-12 flex flex-wrap gap-6 md:gap-8">
-              <a href="mailto:anchetajaymark69@gmail.com" className="text-[0.7rem] md:text-[0.75rem] font-bold uppercase tracking-[0.2em] text-[var(--yellow)] hover:underline underline-offset-4">Msg me&rarr;</a>
-              <a href="#" className="text-[0.7rem] md:text-[0.75rem] font-bold uppercase tracking-[0.2em] text-[var(--fg2)] hover:text-[var(--fg)]">Download CV &darr;</a>
+              <a
+                href="/cv/JAYMARK ANCHETA - CV.pdf"
+                download="JAYMARK ANCHETA - CVpdf"
+                className="text-[0.7rem] md:text-[0.75rem] font-bold uppercase tracking-[0.2em] text-[var(--fg2)] hover:text-[var(--fg)]"
+              >
+                Download CV &darr;
+              </a>
             </div>
           </div>
 
